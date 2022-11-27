@@ -1,4 +1,15 @@
-const series = [
+export type SeriesType = {
+  id: number;
+  name: string;
+  creator: string;
+  year: number;
+  poster: string;
+  watched: boolean;
+  score: number;
+  emmies: number;
+};
+
+export const series = [
   {
     id: 1,
     name: 'The Sopranos',
@@ -29,7 +40,7 @@ const series = [
     poster:
       'https://pics.filmaffinity.com/Mad_Men_Serie_de_TV-351490728-large.jpg',
     watched: true,
-    score: 5,
+    score: 3,
     emmies: 116,
   },
   {
@@ -39,7 +50,7 @@ const series = [
     year: 2001,
     poster: 'https://www.cine.com/media/series/2711.jpg',
     watched: true,
-    score: 5,
+    score: 4,
     emmies: 53,
   },
   {
@@ -47,7 +58,7 @@ const series = [
     name: 'Atypical',
     creator: 'Robia Rashid',
     year: 2017,
-    poster: 'https://www.cine.com/media/series/2711.jpg',
+    poster: 'https://pics.filmaffinity.com/atypical-405052091-mmed.jpg',
     watched: false,
     score: 0,
     emmies: 0,
