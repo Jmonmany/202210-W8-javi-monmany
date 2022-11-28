@@ -22,4 +22,10 @@ export abstract class AbstractComponent {
     this.element = htmlElement;
     this.element.outerHTML = this.template;
   }
+  cleanHtml(selector: string) {
+    const htmlElement = document.querySelector(selector);
+    if (htmlElement === null) return;
+    this.element.innerHTML = '';
+    return this.element;
+  }
 }

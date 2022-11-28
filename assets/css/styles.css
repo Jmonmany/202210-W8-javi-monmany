@@ -119,3 +119,9 @@ img {
   color: #fff;
   padding: 10px 20px;
 }
+i.far:hover{
+    color: red;
+    cursor: pointer;
+}
+
+

@@ -1,7 +1,6 @@
-import { series } from '../../series.js';
+import { series, SeriesType } from '../../series.js';
 import { AbstractComponent } from '../abstractClass.js';
 import { List } from '../lists/lists.js';
-import { SeriesType } from '../../series.js';
 export class Main extends AbstractComponent {
   updatedSeries: SeriesType[];
   constructor(selector: string) {
@@ -11,12 +10,9 @@ export class Main extends AbstractComponent {
     this.outRender(selector);
     this.manageComponent();
     this.manageDeletion();
+    this.manageAddition();
   }
-  /*
-  Tasks
-  Responsabilidades de Main restantes:
-  - Actualizar esa renderización cuando se valoren peliculas
-  */
+
   manageComponent() {
     const seriesArray = this.separatingSeries();
     new List('slot[name="pending-list"]', seriesArray[0]);
@@ -31,10 +27,39 @@ export class Main extends AbstractComponent {
       const index = [...nodeList].indexOf(element);
       const id = seriesArray[index].id;
       this.updatedSeries = this.updatedSeries.filter((item) => item.id !== id);
-      console.log(this.updatedSeries);
+      // console.log(this.updatedSeries);
     };
     const nodeList = document.querySelectorAll('.icon--delete');
     nodeList.forEach((item) => item.addEventListener('click', closeButton));
+  }
+
+  manageAddition(): void {
+    const handleScore = (event: Event) => {
+      const element = event.target as HTMLElement;
+      const numberOfStars = +element.title[0];
+      const serieName =
+        element.parentElement?.parentElement?.previousElementSibling
+          ?.previousElementSibling?.innerHTML;
+      // console.log(numberOfStars);
+      this.updatedSeries = this.updatedSeries.map((item) =>
+        item.name === serieName ? { ...item, watched: true } : item
+      );
+      this.updatedSeries = this.updatedSeries.map((item) =>
+        item.name === serieName ? { ...item, score: numberOfStars } : item
+      );
+      // this.updatedSeries.forEach((item) =>
+      //   item.name === serieName
+      //     ? { ...item, watched: true, score: +numberOfStars }
+      //     : item
+      // );
+      console.log(this.updatedSeries);
+      // this.cleanHtml('.series-list');
+      const e = document.querySelectorAll('.series-list');
+      if (e === null) return;
+      e.forEach((item) => (item.innerHTML = ''));
+    };
+    const nodeList = document.querySelectorAll('i.far');
+    nodeList.forEach((item) => item.addEventListener('click', handleScore));
   }
   separatingSeries() {
     const seriesArray = [
