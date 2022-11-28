@@ -1,7 +1,7 @@
 import { SeriesType } from '../../series.js';
 export const Score = (item: SeriesType) => {
   let template = ``;
-  if (item.watched === false) {
+  if (!item.watched) {
     for (let i = 1; i <= 5; i++) {
       template += ` 
                 <li class="score__star">
@@ -9,7 +9,6 @@ export const Score = (item: SeriesType) => {
                   </li>
         `;
     }
-    console.log(template);
     return template;
   } else {
     for (let i = 1; i <= item.score; i++) {
@@ -19,7 +18,6 @@ export const Score = (item: SeriesType) => {
                   </li>
         `;
     }
-    console.log(template);
     return template;
   }
 };
