@@ -6,7 +6,7 @@ export class List extends AbstractComponent {
   constructor(selector: string, item: SeriesType[]) {
     super();
     this.template = this.createTemplate(item);
-    this.outRender(selector);
+    this.render(selector);
   }
   createTemplate(item: SeriesType[]) {
     let template = ``;
