@@ -1,24 +1,23 @@
 import { series, SeriesType } from '../../series.js';
 import { AbstractComponent } from '../abstractClass.js';
 import { List } from '../lists/lists.js';
+let localSeries = series;
 export class Main extends AbstractComponent {
   updatedSeries: SeriesType[];
   constructor(selector: string) {
     super();
-    this.updatedSeries = series;
+    this.updatedSeries = localSeries;
     this.template = this.createTemplate();
-    this.outRender(selector);
+    this.addRender(selector);
     this.manageComponent();
     this.manageDeletion();
     this.manageAddition();
   }
-
   manageComponent() {
     const seriesArray = this.separatingSeries();
-    new List('slot[name="pending-list"]', seriesArray[0]);
-    new List('slot[name="watched-list"]', seriesArray[1]);
+    new List('.series-list', seriesArray[0]);
+    new List('.series-list--watched', seriesArray[1]);
   }
-
   manageDeletion() {
     const seriesArray = this.separatingSeries().flat();
     const closeButton = (event: Event) => {
@@ -26,13 +25,16 @@ export class Main extends AbstractComponent {
       (element.parentElement as HTMLElement).remove();
       const index = [...nodeList].indexOf(element);
       const id = seriesArray[index].id;
-      this.updatedSeries = this.updatedSeries.filter((item) => item.id !== id);
-      // console.log(this.updatedSeries);
+      localSeries = this.updatedSeries.filter((item) => item.id !== id);
+      this.updateRender();
     };
     const nodeList = document.querySelectorAll('.icon--delete');
     nodeList.forEach((item) => item.addEventListener('click', closeButton));
   }
-
+  updateRender() {
+    this.cleanHtml('.main');
+    new Main('.container');
+  }
   manageAddition(): void {
     const handleScore = (event: Event) => {
       const element = event.target as HTMLElement;
@@ -40,23 +42,12 @@ export class Main extends AbstractComponent {
       const serieName =
         element.parentElement?.parentElement?.previousElementSibling
           ?.previousElementSibling?.innerHTML;
-      // console.log(numberOfStars);
-      this.updatedSeries = this.updatedSeries.map((item) =>
-        item.name === serieName ? { ...item, watched: true } : item
+      localSeries = this.updatedSeries.map((item) =>
+        item.name === serieName
+          ? { ...item, watched: true, score: numberOfStars }
+          : item
       );
-      this.updatedSeries = this.updatedSeries.map((item) =>
-        item.name === serieName ? { ...item, score: numberOfStars } : item
-      );
-      // this.updatedSeries.forEach((item) =>
-      //   item.name === serieName
-      //     ? { ...item, watched: true, score: +numberOfStars }
-      //     : item
-      // );
-      console.log(this.updatedSeries);
-      // this.cleanHtml('.series-list');
-      const e = document.querySelectorAll('.series-list');
-      if (e === null) return;
-      e.forEach((item) => (item.innerHTML = ''));
+      this.updateRender();
     };
     const nodeList = document.querySelectorAll('i.far');
     nodeList.forEach((item) => item.addEventListener('click', handleScore));
@@ -68,7 +59,6 @@ export class Main extends AbstractComponent {
     ];
     return seriesArray;
   }
-
   createTemplate() {
     const seriesArray = this.separatingSeries();
     return `
@@ -78,16 +68,12 @@ export class Main extends AbstractComponent {
             <section class="series-pending">
               <h3 class="subsection-title">Pending series</h3>
                 <p class="info">You have ${seriesArray[0].length} series pending to watch</p>
-                  <ul class="series-list">
-                    <slot name="pending-list"></slot>
-                  </ul>
+                  <ul class="series-list"></ul>
             </section>
             <section class="series-watched">
               <h3 class="subsection-title">Watched series</h3>
                 <p class="info">You have watched ${seriesArray[1].length} series</p>
-                  <ul class="series-list series-list--watched">
-                    <slot name="watched-list"></slot>
-                  </ul>
+                  <ul class="series-list series-list--watched"></ul>
             </section>
           </section>
         </main> 

@@ -4,28 +4,28 @@ export abstract class AbstractComponent {
   constructor() {
     //
   }
-  render(selector: string) {
+  protected render(selector: string) {
     const htmlElement = document.querySelector(selector);
     if (htmlElement === null) return;
     this.element = htmlElement;
     this.element.innerHTML = this.template;
   }
-  addRender(selector: string) {
+  protected addRender(selector: string) {
     const htmlElement = document.querySelector(selector);
     if (htmlElement === null) return;
     this.element = htmlElement;
     this.element.innerHTML += this.template;
   }
-  outRender(selector: string) {
+  protected outRender(selector: string) {
     const htmlElement = document.querySelector(selector);
     if (htmlElement === null) return;
     this.element = htmlElement;
     this.element.outerHTML = this.template;
   }
-  cleanHtml(selector: string) {
-    const htmlElement = document.querySelector(selector);
+  protected cleanHtml(selector: string) {
+    const htmlElement = document.querySelectorAll(selector);
     if (htmlElement === null) return;
-    this.element.innerHTML = '';
-    return this.element;
+    htmlElement.forEach((item) => (item.innerHTML = ''));
+    return htmlElement;
   }
 }
